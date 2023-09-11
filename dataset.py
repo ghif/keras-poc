@@ -2,6 +2,9 @@ import os
 import numpy as np
 import gzip
 
+import tensorflow as tf
+import keras
+
 def load_data(data_dir=None):
     if data_dir is None:
         data_dir = "/Users/mghifary/Work/Code/AI/data/fashion_mnist"
@@ -36,3 +39,36 @@ def load_data(data_dir=None):
 
 
     return (x_train, y_train), (x_test, y_test)
+
+def preprocess_fashionmnist(ds, shuffle=False, augment=False, batch_size=32):
+    AUTOTUNE = tf.data.AUTOTUNE
+
+    rescale = keras.Sequential([
+        keras.layers.Rescaling(1./255)
+    ])
+
+    data_augmentation = keras.Sequential([
+        keras.layers.RandomZoom(0.1),
+    ])
+
+    # Rescale datasets
+    ds = ds.map(
+        lambda x, y: (rescale(x), y), 
+        num_parallel_calls=AUTOTUNE
+    )
+
+    if shuffle:
+        ds = ds.shuffle(buffer_size=1024)
+
+    # Batch all datasets
+    ds = ds.batch(batch_size)
+
+    # Apply data augmentation
+    if augment:
+        ds = ds.map(
+            lambda x, y: (data_augmentation(x, training=True), y),
+            num_parallel_calls=AUTOTUNE
+        )
+
+    # Use buffered prefetching on all datasets
+    return ds.prefetch(buffer_size=AUTOTUNE)
