@@ -33,3 +33,27 @@ def plot_latent_space(vae, n=30, figsize=15):
     plt.ylabel("z[1]")
     plt.imshow(figure, cmap="Greys_r")
     plt.show()
+
+def visualize_dataset(dataset, title="Untitled", n_samples=9):
+    plt.figure(figsize=(6, 6)).suptitle(title, fontsize=18)
+
+    # decide subplot dimension
+    d = np.sqrt(n_samples)
+    d = np.ceil(d).astype("uint8")
+
+    for i, samples in enumerate(iter(dataset.take(n_samples))):
+        if type(samples) is tuple:
+            images = samples[0]
+        else:
+            images = samples
+        
+        plt.subplot(d, d, i + 1)
+        img = images[0].numpy()
+        # print(images.shape)
+        # print(img.shape)
+        vmin = np.min(img)
+        vmax = np.max(img)
+        # print(vmin, vmax)
+        plt.imshow(img, cmap="gray", vmin=vmin, vmax=vmax)
+        plt.axis("off")
+    plt.show()

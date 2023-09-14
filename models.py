@@ -1,6 +1,65 @@
 import tensorflow as tf
 import keras
 
+class MLP(keras.Model):
+    """Multi-layer Perceptron"""
+
+    def __init__(self, num_classes=10):
+        super().__init__()
+        self.flatten = keras.layers.Flatten()
+        self.hidden_1 = keras.layers.Dense(256, activation="relu")
+        self.hidden_2 = keras.layers.Dense(128, activation="relu")
+        self.logit = keras.layers.Dense(num_classes)
+
+    def call(self, x):
+        y = self.flatten(x)
+        y = self.hidden_1(y)
+        y = self.hidden_2(y)
+        return self.logit(y)
+
+class ConvNet(keras.Modell):
+    """Simple 2D ConvNet"""
+
+    def __init__(self, num_classes=10, input_shape=(28, 28, 1)):
+        super().__init__()
+        self.conv_1 = keras.layers.Conv2D(8, (3, 3), input_shape=input_shape)
+        self.maxpool = keras.layers.MaxPooling2D((2, 2))
+        self.flatten = keras.layers.Flatten()
+        self.logit = keras.layers.Dense(num_classes)
+    
+    def call(self, inputs):
+        y = self.conv_1(inputs)
+        y = self.maxpool(y)
+        y = self.flaten(y)
+        return self.logit(y)
+    
+class LeNet5(keras.Model):
+    """LeNet5 architecture"""
+
+    def __init__(self, num_classes=10, input_shape=(28, 28, 1)):
+        super().__init__()
+        self.conv_1 = keras.layers.Conv2D(32, kernel_size=(5, 5), padding="same", activation="relu", input_shape=input_shape)
+        self.maxpool = keras.layers.MaxPool2D(2, 2)
+
+        self.conv_2 = keras.layers.Conv2D(48, kernel_size=(5, 5), padding="valid", activation="relu")
+        
+
+        self.flatten = keras.layers.Flatten()
+
+        self.dense_1 = keras.layers.Dense(256, activation="relu")
+        self.dense_2 = keras.layers.Dense(84, activation="relu")
+        self.logit = keras.layers.Dense(num_classes)
+        
+    def call(self, inputs):
+        y = self.conv_1(inputs)
+        y = self.maxpool(y)
+        y = self.conv_2(y)
+        y = self.maxpool(y)
+        y = self.flatten(y)
+        y = self.dense_1(y)
+        y = self.dense_2(y)
+        return self.logit(y)
+
 class Sampling(keras.layers.Layer):
     """
     Uses (z_mean, z_log_var) to sample z, the vector encoding a digit.
@@ -12,7 +71,6 @@ class Sampling(keras.layers.Layer):
         dim = tf.shape(z_mean)[1]
         epsilon = tf.random.normal(shape=(batch, dim))
         return z_mean + tf.exp(0.5 * z_log_var) * epsilon
-
 
 
 def create_conv_encoder(input_shape=(28, 28, 1), latent_dim=2):
