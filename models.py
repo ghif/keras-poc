@@ -39,10 +39,11 @@ class LeNet5(keras.Model):
     def __init__(self, num_classes=10, input_shape=(28, 28, 1)):
         super().__init__()
         self.conv_1 = keras.layers.Conv2D(32, kernel_size=(5, 5), padding="same", activation="relu", input_shape=input_shape)
-        self.maxpool = keras.layers.MaxPool2D(2, 2)
+        self.maxpool_1 = keras.layers.MaxPool2D(2, 2)
 
         self.conv_2 = keras.layers.Conv2D(48, kernel_size=(5, 5), padding="valid", activation="relu")
         
+        self.maxpool_2 = keras.layers.MaxPool2D(2, 2)
 
         self.flatten = keras.layers.Flatten()
 
@@ -52,9 +53,9 @@ class LeNet5(keras.Model):
         
     def call(self, inputs):
         y = self.conv_1(inputs)
-        y = self.maxpool(y)
+        y = self.maxpool_1(y)
         y = self.conv_2(y)
-        y = self.maxpool(y)
+        y = self.maxpool_2(y)
         y = self.flatten(y)
         y = self.dense_1(y)
         y = self.dense_2(y)
