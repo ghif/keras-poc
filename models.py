@@ -17,7 +17,7 @@ class MLP(keras.Model):
         y = self.hidden_2(y)
         return self.logit(y)
 
-class ConvNet(keras.Modell):
+class ConvNet(keras.Model):
     """Simple 2D ConvNet"""
 
     def __init__(self, num_classes=10, input_shape=(28, 28, 1)):
