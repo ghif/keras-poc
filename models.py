@@ -32,7 +32,44 @@ class ConvNet(keras.Model):
         y = self.maxpool(y)
         y = self.flaten(y)
         return self.logit(y)
+
+class GhifNet5(keras.Model):
+    """LeNet5 architecture"""
+
+    def __init__(self, num_classes=10, input_shape=(28, 28, 1)):
+        super().__init__()
+        self.conv_1 = keras.layers.Conv2D(32, kernel_size=(5, 5), padding="same", input_shape=input_shape)
+        self.bn_1 = keras.layers.BatchNormalization()
+        self.maxpool_1 = keras.layers.MaxPool2D(2, 2)
+
+        self.conv_2 = keras.layers.Conv2D(48, kernel_size=(5, 5), padding="same")
+        self.bn_2 = keras.layers.BatchNormalization()
+        
+        self.maxpool_2 = keras.layers.MaxPool2D(2, 2)
+
+        self.flatten = keras.layers.Flatten()
+
+        self.dense_1 = keras.layers.Dense(256, activation="relu")
+        self.dense_2 = keras.layers.Dense(128, activation="relu")
+
+        self.logit = keras.layers.Dense(num_classes)
+        
+    def call(self, inputs):
+        y = self.conv_1(inputs)
+        y = self.bn_1(y)
+        y = self.maxpool_1(y)
+
+        y = self.conv_2(y)
+        y = self.bn_2(y)
+        y = self.maxpool_2(y)
+        y = self.flatten(y)
+
+        y = self.dense_1(y)
+        y = self.dense_2(y)
+
+        return self.logit(y)
     
+
 class LeNet5(keras.Model):
     """LeNet5 architecture"""
 
