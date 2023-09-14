@@ -16,6 +16,33 @@ class MLP(keras.Model):
         y = self.hidden_1(y)
         y = self.hidden_2(y)
         return self.logit(y)
+    
+class MLPBN(keras.Model):
+    """Multi-layer Perceptron"""
+
+    def __init__(self, num_classes=10):
+        super().__init__()
+        self.flatten = keras.layers.Flatten()
+        self.hidden_1 = keras.layers.Dense(512, activation="relu")
+        self.bn_1 = keras.layers.BatchNormalization()
+
+        self.hidden_2 = keras.layers.Dense(256, activation="relu")
+        self.bn_2 = keras.layers.LayerNormalization()
+
+        self.hidden_3 = keras.layers.Dense(128, activation="relu")
+        self.logit = keras.layers.Dense(num_classes)
+
+    def call(self, x):
+        y = self.flatten(x)
+        y = self.hidden_1(y)
+        y = self.bn_1(y)
+
+        y = self.hidden_2(y)
+        y = self.bn_2(y)
+
+        y = self.hidden_3(y)
+
+        return self.logit(y)
 
 class ConvNet(keras.Model):
     """Simple 2D ConvNet"""
