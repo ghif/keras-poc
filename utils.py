@@ -58,7 +58,7 @@ def visualize_dataset(dataset, title="Untitled", n_samples=9):
         plt.axis("off")
     plt.show()
 
-def visualize_imgrid(X, title="Untitled"):
+def visualize_imgrid(X, title="Untitled", figpath=None):
     plt.figure(figsize=(6, 6)).suptitle(title, fontsize=18)
 
     n_samples = X.shape[0]
@@ -77,3 +77,7 @@ def visualize_imgrid(X, title="Untitled"):
         # print(vmin, vmax)
         plt.imshow(img, cmap="gray", vmin=vmin, vmax=vmax)
         plt.axis("off")
+    
+    if figpath is not None:
+        plt.savefig(figpath)
+

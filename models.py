@@ -1,6 +1,32 @@
 import tensorflow as tf
 import keras
 
+def make_mlp(input_shape=(28, 28, 1), num_classes=10):
+    """
+    Multi-layer Perceptraon -- functional API
+
+    """
+    inputs = keras.Input(shape=input_shape)
+    x = keras.layers.Flatten()(inputs)
+    x = keras.layers.Dense(256, activation="relu")(x)
+    x = keras.layers.Dense(128, activation="relu")(x)
+    outputs = keras.layers.Dense(num_classes)(x)
+    model = keras.Model(inputs=inputs, outputs=outputs)
+    return model
+
+class MLPSeq(keras.Sequential):
+    """
+    Multi-layer Perceptraon -- sequential model
+
+    """
+    def __init__(self, num_classes):
+        super().__init__()
+        self.add(keras.layers.Flatten())
+        self.add(keras.layers.Dense(256, activation="relu"))
+        self.add(keras.layers.Dense(128, activation="relu"))
+        self.add(keras.layers.Dense(num_classes))
+        
+
 class MLP(keras.Model):
     """Multi-layer Perceptron"""
 
@@ -44,6 +70,18 @@ class MLPBN(keras.Model):
 
         return self.logit(y)
 
+
+class ConvNetSeq(keras.Sequential):
+    """Simple 2D ConvNet"""
+
+    def __init__(self, num_classes=10, input_shape=(28, 28, 1)):
+        super().__init__()
+        self.add(keras.layers.Conv2D(8, (3, 3), input_shape=input_shape))
+        self.add(keras.layers.MaxPooling2D((2, 2)))
+        self.add(keras.layers.Flatten())
+        self.add(keras.layers.Dense(num_classes))
+    
+
 class ConvNet(keras.Model):
     """Simple 2D ConvNet"""
 
@@ -57,7 +95,7 @@ class ConvNet(keras.Model):
     def call(self, inputs):
         y = self.conv_1(inputs)
         y = self.maxpool(y)
-        y = self.flaten(y)
+        y = self.flatten(y)
         return self.logit(y)
 
 class GhifNet5(keras.Model):
@@ -96,7 +134,23 @@ class GhifNet5(keras.Model):
 
         return self.logit(y)
     
+class LeNet5Seq(keras.Sequential):
+    """
+    LeNet5 architecture -- Sequential
+    """
+    def __init__(self, num_classes=10, input_shape=(28, 28, 1)):
+        super().__init__()
+        self.add(keras.layers.Conv2D(32, kernel_size=(5, 5), padding="same", activation="relu", input_shape=input_shape))
+        self.add(keras.layers.MaxPool2D(2, 2))
+        self.add(keras.layers.Conv2D(48, kernel_size=(5, 5), padding="valid", activation="relu"))
+        self.add(keras.layers.MaxPool2D(2, 2))
 
+        self.add(keras.layers.Flatten())
+
+        self.add(keras.layers.Dense(256, activation="relu"))
+        self.add(keras.layers.Dense(84, activation="relu"))
+        self.add(keras.layers.Dense(num_classes))
+        
 class LeNet5(keras.Model):
     """LeNet5 architecture"""
 
