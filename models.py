@@ -250,20 +250,8 @@ class VAE(keras.Model):
         with tf.GradientTape() as tape:
             z_mean, z_log_var, z = self.encoder(x)
             reconstruction = self.decoder(z)
-            # reconstruction_loss = tf.reduce_mean(
-            #     tf.reduce_sum(
-            #         keras.losses.binary_crossentropy(data, reconstruction), axis=(1 , 2)
-            #     )
-            # )
 
             reconstruction_loss = self.compute_loss(y=x, y_pred=reconstruction)
-            # kl_loss = -0.5 * (1 + z_log_var - tf.square(z_mean) - tf.exp(z_log_var))
-            # kl_loss = tf.reduce_mean(tf.reduce_sum(kl_loss, axis=1))
-
-            # kl_loss = -0.5 * tf.reduce_mean(
-            #     1 + z_log_var - tf.square(z_mean) - tf.exp(z_log_var)
-            # )
-
             kl_loss = -0.5 * tf.reduce_sum(
                 1 + z_log_var - tf.square(z_mean) - tf.exp(z_log_var)
             )
