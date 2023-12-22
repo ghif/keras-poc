@@ -11,7 +11,7 @@ IMG_WIDTH = 224
 
 # Load dataset
 # Train
-train_datadir = os.path.join(DATASET_DIR, "amazon")
+train_datadir = os.path.join(DATASET_DIR, "webcam")
 train_ds = keras.utils.image_dataset_from_directory(
     train_datadir,
     image_size=(IMG_HEIGHT, IMG_WIDTH),
@@ -19,7 +19,7 @@ train_ds = keras.utils.image_dataset_from_directory(
 )
 
 # Test
-test_datadir = os.path.join(DATASET_DIR, "dslr")
+test_datadir = os.path.join(DATASET_DIR, "amazon")
 test_ds = keras.utils.image_dataset_from_directory(
     test_datadir, 
     image_size=(IMG_HEIGHT, IMG_WIDTH),
